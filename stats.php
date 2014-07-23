@@ -1,26 +1,24 @@
-<!-- The MIT License (MIT)
+<?php
 
-Copyright (c) 2011-2014 Twitter, Inc
+  // do query
+  $sql = "SELECT distance AS trip_distance, DATE_FORMAT(tripdate, '%Y, %m-1, %d') 
+  AS date FROM `trips` WHERE date NOT LIKE '0000-00-00 00:00:00' AND date 
+  NOT LIKE '2000-00-00 00:00:00' GROUP BY DATE_FORMAT(date, '%Y, %m, 
+  %d')"; 
+  $queryResult = mysqli_query($con, $sql);
+  $numRows = mysql_num_rows($sql);
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+  foreach($queryResult as $result) {
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+  }
+}
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. -->
-
-
+$con=mysqli_connect("localhost","root","root","cycle");
+// Check connection
+if (!mysqli_connect_errno()) {
+  die;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -55,29 +53,21 @@ THE SOFTWARE. -->
               <ul class="nav masthead-nav">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="trips.php">Trips</a></li>
-                <li class="active"><a href="stats.html">Stats</a></li>
+                <li class="active"><a href="stats.php">Stats</a></li>
               </ul>
             </div>
           </div>
 
           <div class="inner cover">
-            <h1 class="cover-heading">Enter your latest trip.</h1>
-            <p class="lead"></p>
-            <p class="lead">
-              <a href="#" class="btn btn-lg btn-default">Learn more</a>
-            </p>
-          </div>
-
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by Brad Frost.</p>
+            
+            <div class="mastfoot">
+                <div class="inner">
+                  <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
+                </div>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript

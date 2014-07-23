@@ -1,7 +1,7 @@
 <?php
 
 function addTrip($con) {
-	if (!(isset($_POST['duration']) && isset($_POST['distance']) && isset($_POST['tripdate']))) {
+	if (!(isset($_POST['duration']) && isset($_POST['distance']))) {
 		return false;
 	}
 
@@ -9,23 +9,17 @@ function addTrip($con) {
 		return false;
 	}
 
-	// check date here
-	$date_string = date_parse($_POST['tripdate']);
-	if (!(checkdate($date_string["month"], $date_string["day"], $date_string["year"]))) {
-		return false;
-	}
 	// do query
 
 	// escape variables for security
 	$duration = mysqli_real_escape_string($con, $_POST['duration']);
 	$distance = mysqli_real_escape_string($con, $_POST['distance']);
-	$tripdate = mysqli_real_escape_string($con, $_POST['tripdate']);
 
 	$sql=
 	"INSERT INTO 
-	trips (duration, distance, tripdate)
+	trips (duration, distance)
 	VALUES 
-	('$duration', '$distance', '$tripdate')";
+	('$duration', '$distance')";
 
 	if (!mysqli_query($con,$sql)) {
 	  	return false;
@@ -74,48 +68,44 @@ if (!mysqli_connect_errno()) {
               <ul class="nav masthead-nav">
                 <li class="active"><a href="index.php">Home</a></li>
                 <li><a href="trips.php">Trips</a></li>
-                <li><a href="stats.html">Stats</a></li>
+                <li><a href="stats.php">Stats</a></li>
               </ul>
             </div>
           </div>
 
           <div class="inner cover">
-          	<?php
-          	if (isset($_POST['submit'])) {
-	          	if ($succeeded) { ?>
-	          	  Trip Added!
-	          	<?php } else { ?>
-	          	  Error while inputting trip.
-	          	<?php }
-	         }?>
-            <h1 class="cover-heading">Enter your latest trip.</h1>
-            <form class="form" role="form" action="index.php" method="post">
-              <div class="form-group">
-                <!-- <label for="distance">Distance</label> -->
-                <input type="text" class="form-control" id="distance" name="distance" placeholder="Enter trip distance (mi)">
-              </div>
-              <div class="form-group">
-                <!-- <label for="trip-time">Time</label> -->
-                <input type="text" class="form-control" id="duration" name="duration" placeholder="Enter trip duration (min)">
-              </div>
-              <div class="form-group">
-                <!-- <label for="trip-time">Time</label> -->
-                <input type="text" class="form-control" id="tripdate" name="tripdate" placeholder="Enter date of trip (YYYY-MM-DD)">
-              </div>
-              <button type="submit" class="btn btn-default" name="submit">Submit</button>
-            </form>
-          </div>
-
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
-            </div>
-          </div>
-
+          	<div class="trip-entry">
+	            <h1 class="cover-heading">Enter your latest trip.</h1>
+	            <form class="form" role="form" action="index.php" method="post">
+	              <div class="form-group">
+	                <input type="text" class="form-control" id="distance" name="distance" placeholder="How far did you go? (miles)">
+	              </div>
+	              <div class="form-group">
+	                <input type="text" class="form-control" id="duration" name="duration" placeholder="How long did it take you? (minutes)">
+	              </div>
+	              <button type="submit" class="btn btn-default" name="submit">Submit</button>
+	            </form>
+	          </div>
+	          <div class="trip-added">
+	          <?php
+	          	if (isset($_POST['submit'])) {
+		          	if ($succeeded) { ?>
+		          	  <h2>Trip Added!</h2>
+		          	<?php } else { ?>
+		          	  <h2>Error while inputting trip.</h2>
+		          	<?php }
+		       		}
+		       		mysql_close($con);
+		      	?>
+		      	</div>
+	        	<div class="mastfoot">
+		            <div class="inner">
+		              <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
+		            </div>
+		        </div>
+		    	</div>
         </div>
-
       </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript

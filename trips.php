@@ -5,39 +5,47 @@ function getTrips($con) {
   // do query
   $sql=
   "SELECT tripdate, distance, duration FROM `trips`";
-  
   $queryResult = mysqli_query($con, $sql);
   
   if (mysqli_num_rows( $queryResult )==0) {
-    ?>Nothing here.<?php
+    ?><h2>Nothing here.</h2><?php
   }
   else {
     ?>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Distance</th>
-          <th>Duration</th>
-        </tr>
-      </thead>
-      <tbody id="table-rows">
-        <?php
-        while( $row = mysqli_fetch_assoc( $queryResult ) ){
-          $date_string = date_parse($row['tripdate']);
-          $monthNum = $date_string['month'];
-          $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-          $monthName = $dateObj->format('F');
-          ?>
+    <div class="trip-table">
+      <table class="table">
+        <thead>
           <tr>
-            <td><?= $monthName ?> <?= $date_string['day'] ?>, <?= $date_string['year'] ?></td>
-            <td><?= $row['distance'] ?></td>
-            <td><?= $row['duration'] ?></td>
-          </tr><?php
-        }
-        ?>
-      </tbody>
-    </table>
+            <th>Date</th>
+            <th>Distance</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody id="table-rows">
+          <?php
+          while( $row = mysqli_fetch_assoc( $queryResult ) ){
+            $date_string = date_parse($row['tripdate']);
+            $monthNum = $date_string['month'];
+            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+            $monthName = $dateObj->format('F');
+            $tripHour = floor($row['duration']/60);
+            if ($tripHour > 0) {
+               $tripMinute = $row['duration'] - (60 * $tripHour);
+            }
+            else {
+              $tripMinute = $row['duration'];
+            } 
+            ?>
+            <tr>
+              <td><?= $monthName ?> <?= $date_string['day'] ?>, <?= $date_string['year'] ?> at <?= $date_string['hour'] ?>:<?= $date_string['minute'] ?></td>
+              <td><?= $row['distance'] ?> miles</td>
+              <td><?= $tripHour ?> hours and <?= $tripMinute ?> minutes</td>
+            </tr><?php
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
     <?php
   }
   
@@ -84,13 +92,13 @@ if (mysqli_connect_errno()) {
               <ul class="nav masthead-nav">
                 <li><a href="index.php">Home</a></li>
                 <li class="active"><a href="trips.php">Trips</a></li>
-                <li><a href="stats.html">Stats</a></li>
+                <li><a href="stats.php">Stats</a></li>
               </ul>
             </div>
           </div>
 
           <div class="inner cover">
-            <?php getTrips($con); ?>
+            <?php getTrips($con); mysql_close($con);?>
           </div>
 
           <div class="mastfoot">
