@@ -170,4 +170,14 @@ body {
   text-align: left;
 }
 
+.trip-entry {
+  /*margin-top: -40px;*/
+  position: relative;
+}
+
+
+.trip-table {
+  height: 500px !important;
+  overflow: scroll;
+}
 
