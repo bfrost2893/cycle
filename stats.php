@@ -31,7 +31,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="cycle web application">
     <meta name="author" content="brad frost">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="../favicon.ico">
 
     <title>Cycle</title>
 
@@ -111,11 +111,14 @@
 
           <div class="inner cover">
             <div id="google-chart">
-              <h2 id="chart-title">Total Distance and Average Speed over Time</h2>
+              
               <?php
                 if ((!$displayGraph)) {
                    ?><h2>No data to graph!</h2><?php
-                 } 
+                }
+                else {
+                  ?><h2 id="chart-title">Total Distance and Average Speed over Time</h2><?php
+                } 
               ?>
               <div id="time_div" style='height: 500px; width: 120%;'></div>
             </div>

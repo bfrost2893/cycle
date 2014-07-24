@@ -85,7 +85,7 @@ else {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="cycle web application">
     <meta name="author" content="brad frost">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="../favicon.ico">
 
     <title>Cycle</title>
 
