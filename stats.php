@@ -10,13 +10,16 @@
   $sql = "SELECT distance AS trip_distance, duration AS trip_duration, DATE_FORMAT(`tripdate`, '%Y,%m,%d,%H,%i') AS trip_date
           FROM `trips`"; 
   $queryResult = mysqli_query($con, $sql) or die(mysql_error());
-
+  //position variables for making table
+  //the table will be input to google chart api script
   $row_pos = -1;
   $row_step = 1;
 
+  //if rows don't exist, assign displaygraph var to false
   if(mysqli_num_rows( $queryResult ) == 0) {
     $displayGraph = false;
   }
+  //obtain number of rows and set displaygraph var to true
   else {
     $numRows = mysqli_num_rows($queryResult);
     $displayGraph = true;
@@ -46,43 +49,50 @@
       <script type="text/javascript"> 
         google.load("visualization", "1", {packages:["annotationchart"]}); 
         google.setOnLoadCallback(drawData); 
+        //google chart api function to draw chart
         function drawData() { 
+          //let data var equal to GCAPI datatable
           var data = new google.visualization.DataTable(); 
-          data.addColumn('datetime', 'Date'); 
-          data.addColumn('number', 'Total Distance'); 
-          data.addColumn('number', 'Average Speed');
-          // data.addRows(1);
-          // data.setValue(0, 0, new Date(1000));
-          // data.setValue(0, 1, 10);
-          // data.setValue(0, 2, 20);
+          data.addColumn('datetime', 'Date');             //add date column
+          data.addColumn('number', 'Total Distance');     //add total distance column
+          data.addColumn('number', 'Average Speed');      //add average speed column
+
           <?php 
+          //add numRows number of rows (assigned above)
           echo "data.addRows($numRows);\n";
+          //assign base variables to 0
           $total_distance = 0; 
           $row_pos_base1 = 0;
           $avg_speed = 0;
           $speed = 0;
+          //while there is still data to fetch from table
           while($row = mysqli_fetch_assoc($queryResult)) { 
-
+            //increment row position
             $row_pos += $row_step;
+            //increment row_base1 (used for averaging)
             $row_pos_base1 = $row_pos + 1; 
+            //updated total distance
             $total_distance += $row['trip_distance'];
+            //get speed (mph)
             $speed = $row['trip_distance'] / ($row['trip_duration']/60);
+            //calculate average speed
             $avg_speed = ($avg_speed + $speed) / $row_pos_base1;
-            // . $row['trip_date'] .
-            echo "          data.setValue(" . $row_pos . ", 0, new Date(" . $row['trip_date'] . "));\n"; 
-            echo "          data.setValue(" . $row_pos . ", 1, " . $total_distance . ");\n";
-            echo "          data.setValue(" . $row_pos . ", 2, " . $avg_speed . ");\n"; 
+            //echo js to assign values to data var
+            echo "         data.setValue(" . $row_pos . ", 0, new Date(" . $row['trip_date'] . "));\n"; 
+            echo "         data.setValue(" . $row_pos . ", 1, " . $total_distance . ");\n";
+            echo "         data.setValue(" . $row_pos . ", 2, " . $avg_speed . ");\n"; 
           } 
           ?> 
+          //make annotationchart style with element id time_div
           var chart = new google.visualization.AnnotationChart(document.getElementById('time_div'));
+          //chart options
           var options = {
             // title: 'Total Distance and Average Speed over Time',
             displayLegendValues: true,
             displayAnnotations: true,
-            // color: "black",
-            displayLegendDots: true, 
-            // scaleType: miles,           
+            displayLegendDots: true,           
           }; 
+          //draw the chart
           chart.draw(data, options); 
 
         } 
@@ -113,6 +123,7 @@
             <div id="google-chart">
               
               <?php
+                //if there is no data, don't display anything
                 if ((!$displayGraph)) {
                    ?><h2>No data to graph!</h2><?php
                 }
@@ -120,8 +131,13 @@
                   ?><h2 id="chart-title">Total Distance and Average Speed over Time</h2><?php
                 } 
               ?>
+              <!-- display GCAPI chart here -->
               <div id="time_div" style='height: 500px; width: 120%;'></div>
             </div>
+            <?php
+              // close connection
+              mysqli_close($con);
+            ?>
             <div class="mastfoot">
                 <div class="inner">
                   <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>

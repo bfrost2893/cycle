@@ -1,5 +1,7 @@
 <?php
-
+//Input: connection to cycle database
+//Pulls all the table information from the trips table
+//and displays it in a table.
 function getTrips($con) {
   
   // do query
@@ -7,9 +9,11 @@ function getTrips($con) {
   "SELECT tripdate, distance, duration FROM `trips`";
   $queryResult = mysqli_query($con, $sql);
   
+  //if no rows exist, display that nothing is here
   if (mysqli_num_rows( $queryResult )==0) {
     ?><h2>Nothing here.</h2><?php
   }
+  //otherwise, display a formatted table
   else {
     ?>
     <div class="trip-table">
@@ -23,12 +27,11 @@ function getTrips($con) {
         </thead>
         <tbody id="table-rows">
           <?php
+          //while there are still rows to fetch
           while( $row = mysqli_fetch_assoc( $queryResult ) ){
-            // echo $row['tripdate'];
+            //pull tripdate value into datestring with proper formatting
             $date_string = date("F j, Y \a\\t h:i", strtotime($row['tripdate']));
-            // $monthNum = $date_string['month'];
-            // $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            // $monthName = $dateObj->format('F');
+            //format duration values to apear into hours and minutes from minutes
             $tripHour = floor($row['duration']/60);
             if ($tripHour > 0) {
                $tripMinute = $row['duration'] - (60 * $tripHour);
@@ -38,7 +41,6 @@ function getTrips($con) {
             } 
             ?>
             <tr>
-              <!-- <td><?= $monthName ?> <?= $date_string['day'] ?>, <?= $date_string['year'] ?> at <?= $date_string['hour'] ?>:<?= $date_string['minute'] ?></td> -->
               <td><?= $date_string ?></td>
               <td><?= $row['distance'] ?> miles</td>
               <td><?= $tripHour ?> hours and <?= $tripMinute ?> minutes</td>
@@ -52,6 +54,8 @@ function getTrips($con) {
   }
 }
 
+//Input: connection to cycle database
+//Modifies trips table in cycle database and clears the table
 function removeTrips($con) {
 
   if (!(isset($_POST['reset']))) {
@@ -124,6 +128,7 @@ else {
                 if (isset($_POST['reset'])) {
                   removeTrips($con);
                 }
+                // close connection
                 mysqli_close($con);
               ?>
             </form>

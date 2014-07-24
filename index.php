@@ -1,10 +1,12 @@
 <?php
-
+//Input: connection to cycle database
+//Adds a row to the trips table in the cycle database.
 function addTrip($con) {
+	//if post is empty from html form, exit function and display error 
 	if (!(isset($_POST['duration']) && isset($_POST['distance']))) {
 		return false;
 	}
-
+	//if duration and distance values are not numeric, return false and display error
 	if (!(is_numeric($_POST['duration']) && is_numeric($_POST['distance']))) {
 		return false;
 	}
@@ -88,13 +90,17 @@ if (!mysqli_connect_errno()) {
 	          </div>
 	          <div class="trip-added">
 	          <?php
+	          	//if submit button is pressed
 	          	if (isset($_POST['submit'])) {
+	          		//and succeded variable (contains return value of getTrips function)
 		          	if ($succeeded) { ?>
+		          		<!-- display trip added! -->
 		          	  <h2>Trip Added!</h2>
 		          	<?php } else { ?>
 		          	  <h2>Error while inputting trip.</h2>
 		          	<?php }
 		       		}
+		       		// close connection
 		       		mysqli_close($con);
 		      	?>
 		      	</div>
