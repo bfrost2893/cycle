@@ -15,18 +15,12 @@
   $row_step = 1;
 
   if(mysqli_num_rows( $queryResult ) == 0) {
-    ?><h2>No data to graph!</h2><?php
+    $displayGraph = false;
   }
   else {
     $numRows = mysqli_num_rows($queryResult);
+    $displayGraph = true;
   }
-    
-
-  // foreach($queryResult as $result) {
-
-  // }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +42,7 @@
     <link href="css/cycle.css" rel="stylesheet">
 
     <script type="text/javascript" src="http://www.google.com/jsapi"></script> 
-    <div class="google-chart">
+    
       <script type="text/javascript"> 
         google.load("visualization", "1", {packages:["annotationchart"]}); 
         google.setOnLoadCallback(drawData); 
@@ -82,17 +76,18 @@
           ?> 
           var chart = new google.visualization.AnnotationChart(document.getElementById('time_div'));
           var options = {
-            title: 'Total Distance and Average Speed over Time',
+            // title: 'Total Distance and Average Speed over Time',
             displayLegendValues: true,
             displayAnnotations: true,
-            color: "black",
-            displayLegendDots: true,
+            // color: "black",
+            displayLegendDots: true, 
+            // scaleType: miles,           
           }; 
           chart.draw(data, options); 
 
         } 
       </script> 
-    </div>
+    
   </head>
 
   <body>
@@ -115,7 +110,15 @@
           </div>
 
           <div class="inner cover">
-            <div id="time_div" style='height: 500px; width: 120%;'></div>
+            <div id="google-chart">
+              <h2 id="chart-title">Total Distance and Average Speed over Time</h2>
+              <?php
+                if ((!$displayGraph)) {
+                   ?><h2>No data to graph!</h2><?php
+                 } 
+              ?>
+              <div id="time_div" style='height: 500px; width: 120%;'></div>
+            </div>
             <div class="mastfoot">
                 <div class="inner">
                   <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
