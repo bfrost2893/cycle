@@ -59,6 +59,14 @@ body {
   padding: 30px;
 }
 
+/*#trips-header {
+  padding-bottom: 60px;
+}*/
+
+#trips-inner {
+  padding-top: 50px;
+}
+
 
 /*
  * Header
@@ -183,6 +191,17 @@ body {
   font-size: 18px;
   background-color: rgba(100,100,100,.2);
   border-radius: 30px;
-  padding: 20px;
+  padding: 30px;
+  /*margin: 20px;*/
 }
 
+#google-chart {
+  color: #ffffff;
+}
+
+
+/*#chart-title {
+  background-color: rgba(100,100,100,.1);
+  border-radius: 10px;
+  color: #fff;
+}*/
