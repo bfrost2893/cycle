@@ -95,7 +95,7 @@ if (!mysqli_connect_errno()) {
 		          	  <h2>Error while inputting trip.</h2>
 		          	<?php }
 		       		}
-		       		mysql_close($con);
+		       		mysqli_close($con);
 		      	?>
 		      	</div>
 	        	<div class="mastfoot">
