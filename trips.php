@@ -13,7 +13,7 @@ function getTrips($con) {
   else {
     ?>
     <div class="trip-table">
-      <table class="table">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th>Date</th>
@@ -24,10 +24,11 @@ function getTrips($con) {
         <tbody id="table-rows">
           <?php
           while( $row = mysqli_fetch_assoc( $queryResult ) ){
-            $date_string = date_parse($row['tripdate']);
-            $monthNum = $date_string['month'];
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F');
+            // echo $row['tripdate'];
+            $date_string = date("F j, Y \a\\t h:i", strtotime($row['tripdate']));
+            // $monthNum = $date_string['month'];
+            // $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+            // $monthName = $dateObj->format('F');
             $tripHour = floor($row['duration']/60);
             if ($tripHour > 0) {
                $tripMinute = $row['duration'] - (60 * $tripHour);
@@ -37,7 +38,8 @@ function getTrips($con) {
             } 
             ?>
             <tr>
-              <td><?= $monthName ?> <?= $date_string['day'] ?>, <?= $date_string['year'] ?> at <?= $date_string['hour'] ?>:<?= $date_string['minute'] ?></td>
+              <!-- <td><?= $monthName ?> <?= $date_string['day'] ?>, <?= $date_string['year'] ?> at <?= $date_string['hour'] ?>:<?= $date_string['minute'] ?></td> -->
+              <td><?= $date_string ?></td>
               <td><?= $row['distance'] ?> miles</td>
               <td><?= $tripHour ?> hours and <?= $tripMinute ?> minutes</td>
             </tr><?php
@@ -96,14 +98,13 @@ if (mysqli_connect_errno()) {
               </ul>
             </div>
           </div>
-
           <div class="inner cover">
-            <?php getTrips($con); mysql_close($con);?>
-          </div>
+            <?php getTrips($con); mysqli_close($con);?>
 
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
+            <div class="mastfoot">
+              <div class="inner">
+                <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
+              </div>
             </div>
           </div>
 
