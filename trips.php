@@ -50,8 +50,21 @@ function getTrips($con) {
     </div>
     <?php
   }
+}
+
+function removeTrips($con) {
+
+  if (!(isset($_POST['reset']))) {
+    return false;
+  }
   
-  
+  $sql="TRUNCATE TABLE `trips`";
+
+  if (!mysqli_query($con,$sql)) {
+      return false;
+  } else {
+      return true;
+  }
 }
 
 $con=mysqli_connect("localhost","root","root","cycle");
@@ -59,6 +72,10 @@ $con=mysqli_connect("localhost","root","root","cycle");
 if (mysqli_connect_errno()) {
   die;
 }
+else {
+  removeTrips($con);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,7 +105,7 @@ if (mysqli_connect_errno()) {
 
         <div class="cover-container">
 
-          <div class="masthead clearfix">
+          <div class="masthead clearfix" id="trips-header">
             <div class="inner">
               <h3 class="masthead-brand">Cycle</h3>
               <ul class="nav masthead-nav">
@@ -98,9 +115,19 @@ if (mysqli_connect_errno()) {
               </ul>
             </div>
           </div>
-          <div class="inner cover">
-            <?php getTrips($con); mysqli_close($con);?>
-
+          <div class="inner cover" id="trips-inner">
+            <?php getTrips($con);?>
+            <form class="form" role="form" action="trips.php" method="post"> 
+              <button type="submit" class="btn btn-default" name="reset">Reset</button>
+            
+              <?php
+                if (isset($_POST['reset'])) {
+                  removeTrips($con);
+                }
+                mysqli_close($con);
+              ?>
+            </form>
+            
             <div class="mastfoot">
               <div class="inner">
                 <p>Powered by <a href="http://getbootstrap.com">Bootstrap</a>, built by <strong>Brad Frost</strong>.</p>
